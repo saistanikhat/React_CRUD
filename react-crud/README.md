@@ -4,8 +4,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+This project is linked to a json-server. Before starting it, create a json-server mock data and run:
+### `yarn install`
+### `yarn start`
 
+In the project directory, you can run:
+### `yarn install`
 ### `yarn start`
 
 Runs the app in the development mode.\
