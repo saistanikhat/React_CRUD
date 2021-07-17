@@ -6,6 +6,28 @@ import axios from 'axios';
 import { FixedSizeList as List } from 'react-window';
 import {AutoSizer} from 'react-virtualized';
 
+const Row = (props) => {
+  const {data, index, style} = props;
+  const item = data.users[index];
+  const listClass = (index === data.currentIndex ? "active" : "");
+  return (
+      <div style = {style} >
+        <div className={`card ${listClass}`} onClick={() => data.setActiveUser(item, index)}>
+          <div className="card-body">
+            <h5 className="card-title">
+              {item["Full Name"]}
+            </h5>
+            <p className="card-text">
+              {item["Full Name"]}
+              <br />
+              <span className="phone">{item["Full Name"]}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+  )
+}
+
 export default class UsersList extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +42,9 @@ export default class UsersList extends Component {
       users: [],
       currentUser: null,
       currentIndex: -1,
-      searchCountry: ""
+      searchCountry: "",
+      loading: true,
+      error:''
     };
   }
 
@@ -41,11 +65,18 @@ export default class UsersList extends Component {
       .then(response => {
         console.log(response)
         this.setState({
-          users: response.data
+          loading: false,
+          users: response.data,
+          error:''
         });
         console.log(response.data);
       })
       .catch(e => {
+        this.setState({
+          loading: false,
+          users: [],
+          error: "Something went wrong"
+        })
         console.log(e);
       });
   }
@@ -95,99 +126,110 @@ export default class UsersList extends Component {
   }
 
   render() {
-    const { searchCountry, users, currentUser, currentIndex } = this.state;
+    const { searchCountry, users, currentUser, currentIndex, loading, error } = this.state;
     return (
-      <div className="list row">
-        <div className="col-md-8">
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by country"
-              value={searchCountry}
-              onChange={this.onChangeSearchCountry}
-            />
-            <div className="input-group-append">
-              <button
-                className="btn btn-outline-secondary"
-                type="button"
-                onClick={this.searchCountry}
-              >
-                Search
-              </button>
+      <div className="clearfix">
+        {loading ? 'Loading' :
+          (<div className="grid row">
+          <div className="col-md-8">
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by country"
+                value={searchCountry}
+                onChange={this.onChangeSearchCountry}
+              />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={this.searchCountry}
+                >
+                  Search
+                </button>
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={this.removeAllUsers}
+                >
+                  Remove All
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-6">
-          <h4>Users List</h4>
+          
+          <div className="col-md-6">
+            <h4>Users List</h4>
 
-          <ul className="list-group">
-            {users &&
-              users.map((user, index) => (
-                <li
-                  className={
-                    "list-group-item " +
-                    (index === currentIndex ? "active" : "")
-                  }
-                  onClick={() => this.setActiveUser(user, index)}
-                  key={index}
+            <ul className="list-group">
+              {users &&
+                  <AutoSizer>
+                    {({ height, width }) => (
+                      <List
+                      height={400}
+                      width={300}
+                      itemSize={120}
+                      itemCount={users.length}
+                      itemData={{
+                        users,
+                        currentIndex,
+                        setActiveUser: this.setActiveUser
+                      }}
+                      index={currentIndex}
+                    >
+                      {Row}
+                    </List>
+                    )}
+                  </AutoSizer>
+                }
+            </ul>
+          </div>
+          <div className="col-md-6">
+            {currentUser ? (
+              <div>
+                <h4>User Card</h4>
+                <div>
+                  <label>
+                    <strong>Name:</strong>
+                  </label>{" "}
+                  {currentUser["Full Name"]}
+                </div>
+                <div>
+                  <label>
+                    <strong>Email:</strong>
+                  </label>{" "}
+                  {currentUser["Email"]}
+                </div>
+                <div>
+                  <label>
+                    <strong>Date of Birth:</strong>
+                  </label>{" "}
+                  {currentUser["Date of birth"]}
+                </div>
+
+                <div>
+                  <label>
+                    <strong>Country:</strong>
+                  </label>{" "}
+                  {currentUser["Country"]}
+                </div>
+
+                <Link
+                  to={"/users/" + currentUser["Id"]}
+                  className=""
                 >
-                  {user["Full Name"]}
-                </li>
-              ))}
-          </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllUsers}
-          >
-            Remove All
-          </button>
-        </div>
-        <div className="col-md-6">
-          {currentUser ? (
-            <div>
-              <h4>User Card</h4>
-              <div>
-                <label>
-                  <strong>Name:</strong>
-                </label>{" "}
-                {currentUser["Full Name"]}
+                  Edit
+                </Link>
               </div>
+            ) : (
               <div>
-                <label>
-                  <strong>Email:</strong>
-                </label>{" "}
-                {currentUser["Email"]}
+                <br />
+                <p>Click on a card...</p>
               </div>
-              <div>
-                <label>
-                  <strong>Date of Birth:</strong>
-                </label>{" "}
-                {currentUser["Date of birth"]}
-              </div>
-
-              <div>
-                <label>
-                  <strong>Country:</strong>
-                </label>{" "}
-                {currentUser["Country"]}
-              </div>
-
-              <Link
-                to={"/users/" + currentUser["Id"]}
-                className=""
-              >
-                Edit
-              </Link>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Click on a card...</p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </div>)}
+        {error ? error : null}
       </div>
     );
   }
