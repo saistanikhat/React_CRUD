@@ -13,7 +13,7 @@ export default class AddUser extends Component {
       "Id": null,
       "Full Name": "",
       "Country": "",
-      "Date of Birth":"",
+      "Date of birth":"",
       "Email":"",
       "Created at": "",
       submitted: false,
@@ -44,7 +44,7 @@ export default class AddUser extends Component {
           "Id": response.data["Id"],
           "Full Name": response.data["Full Name"],
           "Country": response.data["Country"],
-          "Date of Birth": response.data["Date of Birth"],
+          "Date of birth": response.data["Date of birth"],
           "Email": response.data["Email"],
           "Created at": Date.now(),
           submitted: true
@@ -61,7 +61,7 @@ export default class AddUser extends Component {
       "Id": null,
       "Full Name": "",
       "Country": "",
-      "Date of Birth":"",
+      "Date of birth":"",
       "Email":"",
       "Created at": "",
       submitted: false

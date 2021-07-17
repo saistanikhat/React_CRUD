@@ -16,7 +16,7 @@ export default class User extends Component {
         "Id": null,
         "Full Name": "",
         "Country": "",
-        "Date of Birth":"",
+        "Date of birth":"",
         "Email":"",
         "Created at": ""
       },
@@ -71,7 +71,7 @@ export default class User extends Component {
       "Full Name": this.state.currentUser["Full Name"],
       "Country": this.state.currentUser["Country"],
       "Email": this.state.currentUser["Email"],
-      "Date of Birth": this.state.currentUser["Date of Birth"],
+      "Date of birth": this.state.currentUser["Date of birth"],
       "Created at": this.state.currentUser["Created at"],
       published: status
     };

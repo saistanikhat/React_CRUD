@@ -34,6 +34,9 @@ class UserDataService {
   // }
 
   findByCountry(title) {
+    if(title===""){
+      return http.get(`/users`);
+    }
     return http.get(`/users?Country=${title}`);
   }
 }

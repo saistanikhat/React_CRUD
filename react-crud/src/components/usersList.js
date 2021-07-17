@@ -14,13 +14,11 @@ const Row = (props) => {
       <div style = {style} >
         <div className={`card ${listClass}`} onClick={() => data.setActiveUser(item, index)}>
           <div className="card-body">
-            <h5 className="card-title">
-              {item["Full Name"]}
-            </h5>
-            <p className="card-text">
-              {item["Full Name"]}
-              <br />
-              <span className="phone">{item["Full Name"]}</span>
+            <p className="card-title">
+              Name: {item["Full Name"]}<br />
+              Email: {item["Email"]}<br />
+              Date of Birth: {item["Date of birth"]}<br />
+              Country: {item["Country"]}<br />
             </p>
           </div>
         </div>
@@ -136,7 +134,7 @@ export default class UsersList extends Component {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search by country"
+                placeholder="Search by Country"
                 value={searchCountry}
                 onChange={this.onChangeSearchCountry}
               />
