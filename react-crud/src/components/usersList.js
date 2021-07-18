@@ -154,7 +154,7 @@ export default class UsersList extends Component {
                   className="btn btn-outline-secondary"
                   onClick={this.removeAllUsers}
                 >
-                  Remove All
+                  Delete All Users
                 </button>
               </div>
             </div>
