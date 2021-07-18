@@ -3,16 +3,19 @@ import UserDataService from "../services/userService";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FixedSizeList as List } from 'react-window';
+import { FixedSizeGrid as Grid } from 'react-window';
 import {AutoSizer} from 'react-virtualized';
 
-const Row = (props) => {
-  const {data, index, style} = props;
+
+const Cell = (props) => {
+  const {data, rowIndex, columnIndex, columnCount, itemKey, style} = props;
+  const index = rowIndex*data.columnCount+columnIndex;
   const item = data.users[index];
   const listClass = (index === data.currentIndex ? "active" : "");
+  
   return (
       <div style = {style} >
-        <div className={`card ${listClass}`} onClick={() => data.setActiveUser(item, index)}>
+        <div className={`card padding-10 ${listClass}`} onClick={() => data.setActiveUser(item, rowIndex)}>
           <div className="card-body">
             <p className="card-title">
               Name: {item["Full Name"]}<br />
@@ -128,8 +131,9 @@ export default class UsersList extends Component {
     return (
       <div className="clearfix">
         {loading ? 'Loading' :
-          (<div className="grid row">
-          <div className="col-md-8">
+          (
+            <>
+            <div className="col-md-8">
             <div className="input-group mb-3">
               <input
                 type="text"
@@ -155,34 +159,8 @@ export default class UsersList extends Component {
               </div>
             </div>
           </div>
-          
-          <div className="col-md-6">
-            <h4>Users List</h4>
-
-            <ul className="list-group">
-              {users &&
-                  <AutoSizer>
-                    {({ height, width }) => (
-                      <List
-                      height={400}
-                      width={300}
-                      itemSize={120}
-                      itemCount={users.length}
-                      itemData={{
-                        users,
-                        currentIndex,
-                        setActiveUser: this.setActiveUser
-                      }}
-                      index={currentIndex}
-                    >
-                      {Row}
-                    </List>
-                    )}
-                  </AutoSizer>
-                }
-            </ul>
-          </div>
-          <div className="col-md-6">
+            <br/>
+          <div className="col-md-8">
             {currentUser ? (
               <div>
                 <h4>User Card</h4>
@@ -226,7 +204,39 @@ export default class UsersList extends Component {
               </div>
             )}
           </div>
-        </div>)}
+          <br/>
+          <div className="grid row">
+            <div className="col-md-8">
+              <h4>Users List</h4>
+
+              <ul className="list-group width">
+                {users &&
+                    <AutoSizer>
+                      {({ height, width }) => (
+                        <Grid
+                        height={400}
+                        width={800}
+                        rowCount={users.length}
+                        columnWidth={350}
+                        rowHeight={150}
+                        itemData={{
+                          users,
+                          currentIndex,
+                          columnCount: 2,
+                          setActiveUser: this.setActiveUser
+                        }}
+                        rowIndex={currentIndex}
+                        columnCount={2}
+                      >
+                        {Cell}
+                      </Grid>
+                      )}
+                    </AutoSizer>
+                  }
+              </ul>
+            </div>
+          </div>
+          </>)}
         {error ? error : null}
       </div>
     );

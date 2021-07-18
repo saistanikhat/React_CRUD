@@ -10,12 +10,12 @@ import UsersList from "./components/usersList";
 class App extends Component {
   render() {
     return (
-      <div>
+      <div className="main-wrapper"> 
         <div className="d-flex justify-content-center">
           <h5><br/>USERS BOARD<br/></h5>
         </div>
 
-        <div className="container mt-3">
+        <div className="app-container mt-3">
           <Switch>
             <Route exact path={["/", "/users"]} component={UsersList} />
             <Route exact path="/add" component={AddUser} />
